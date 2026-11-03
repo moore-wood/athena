@@ -234,7 +234,7 @@ parser.add_argument('--cvode_path',
 # -hdf5 argument
 parser.add_argument('-hdf5',
                     action='store_true',
-                    default=False,
+                    default=True,
                     help='enable HDF5 Output')
 
 # -h5double argument
@@ -245,7 +245,7 @@ parser.add_argument('-h5double',
 
 # --hdf5_path argument
 parser.add_argument('--hdf5_path',
-                    default='',
+                    default='/usr/local/hdf5/1.12.1/',
                     help='path to HDF5 libraries')
 
 # -nr_radiation argument

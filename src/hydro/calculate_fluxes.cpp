@@ -166,7 +166,21 @@ void Hydro::CalculateFluxes(AthenaArray<Real> &w, FaceField &b,
   } // end if (order == 4)
   //------------------------------------------------------------------------------
   // end x1 fourth-order hydro
+  
+  // ============================================================
+// Prescribed mass flux at the physical outer x1 boundary
+// ============================================================
 
+if (use_inflx_x1 &&
+    pmb->pbval->block_bcs[BoundaryFace::outer_x1]
+        == BoundaryFlag::user) {
+
+  for (int k = ks; k <= ke; ++k) {
+    for (int j = js; j <= je; ++j) {
+      x1flux(IDN,k,j,ie+1) = inflx_x1(k,j,0);
+    }
+  }
+}
   //--------------------------------------------------------------------------------------
   // j-direction
 

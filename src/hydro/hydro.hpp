@@ -50,6 +50,12 @@ class Hydro {
 
   AthenaArray<Real> flux[3];  // face-averaged flux vector
 
+  // Prescribed radial mass flux at the outer x1 boundary
+  AthenaArray<Real> inflx_x1;
+
+  // Whether the prescribed mass flux is enabled
+  bool use_inflx_x1 = false;
+
   // storage for SMR/AMR
   // TODO(KGF): remove trailing underscore or revert to private:
   AthenaArray<Real> coarse_cons_, coarse_prim_;

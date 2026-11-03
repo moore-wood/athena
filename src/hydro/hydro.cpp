@@ -144,6 +144,13 @@ Hydro::Hydro(MeshBlock *pmb, ParameterInput *pin) :
     laplacian_r_fc_.NewAthenaArray(nc1);
   }
 
+  inflx_x1.NewAthenaArray(nc3, nc2, 1);
+  for (int k = 0; k < nc3; ++k) {
+    for (int j = 0; j < nc2; ++j) {
+      inflx_x1(k,j,0) = 0.0;
+    }
+  }
+
   UserTimeStep_ = pmb->pmy_mesh->UserTimeStep_;
 }
 

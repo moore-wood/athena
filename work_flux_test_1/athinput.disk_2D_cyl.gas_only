@@ -1,0 +1,98 @@
+<comment>
+problem   = Keplerian disk in cylindrical coordinates gas only
+reference =
+configure = --prob=disk_planet --coord=cylindrical -omp -hdf5
+
+<job>make
+problem_id  = disk      # problem ID: basename of output filenames
+
+<output1>
+file_type   = hdf5
+file_basename = disk
+variable    = prim
+dt          = 6283.185307179586    # time increment between outputs
+ghost_zones = 0
+
+<output2>
+file_type   = hst
+file_basename = disk
+dt          = 0.06283185307179586    # time increment between outputs
+
+<output3>
+file_type   = hdf5
+variable     = uov
+file_basename = disk
+dt          = 6283.185307179586      # time increment between outputs
+
+<time>
+cfl_number     = 0.5            # The Courant, Friedrichs, & Lewy (CFL) Number
+nlim           = -1             # cycle limit
+tlim           = 3000000       # time limit
+integrator     = vl2            # time integration algorithm
+xorder         = 2              # order of spatial reconstruction
+ncycle_out     = 100            # interval for stdout summary info
+dt_diagnostics = 0              # interval (in STS stages) for stdout extra dt info
+
+
+<mesh>
+nx1         = 32             # Number of zones in X1-direction
+x1min       = 0.3           # minimum value of X1
+x1max       = 7.0            # maximum value of X1
+ix1_bc      = user           # Inner-X1 boundary condition flag
+ox1_bc      = user        # Outer-X1 boundary condition flag
+x1rat       = -1
+
+nx2         = 32          # Number of zones in X2-direction
+x2min       = 0.             # minimum value of X2
+x2max       = 6.2831853071795862   # maximum value of X2
+ix2_bc      = periodic       # Inner-X2 boundary condition flag
+ox2_bc      = periodic       # Outer-X2 boundary condition flag
+
+nx3         = 1              # Number of zones in X3-direction
+x3min       = -0.5           # minimum value of X3
+x3max       = 0.5            # maximum value of X3
+ix3_bc      = periodic       # Inner-X3 boundary condition flag
+ox3_bc      = periodic       # Outer-X3 boundary condition flag
+
+num_threads = 4
+refinement  = None
+
+<meshblock>
+nx1 = 8
+nx2 = 8
+nx3 = 1
+
+<hydro>
+gamma           = 1.4289      # gamma = C_p/C_v
+dfloor          = 1.e-8
+
+<orbital_advection>
+OAorder     = 2   # 0: w/o OA, 1: w/ OA (1st), 2: w/ OA (2nd)
+Omega0      = 1.0 # angular velocity of the system
+
+<problem>
+GM                             = 1.0
+r0                             = 1.0
+rho0                           = 0.1
+p0_over_r0                     = 0.0025
+dslope                         = 0                    # surface density
+pslope                         = -0.5                    # P/rho slope, Tslope
+GMp                            = 0.0                     # planet mass
+rs                             = 0.6                     # softening length, [R_Hill]
+rad_planet                     = 1.0
+phi_planet                     = 3.141592654
+t0_planet                      = 0.0
+t_planet_growth                = 6.283185307179586        #
+
+# Fixed total mass inflow rate at the outer boundary
+fix_outer_mass_flux = true
+mdot_in             = 0.0002356194490125
+
+Damping_Flag              = 0
+Isothermal_Flag           = 1
+inner_dampingregion_ratio = 1.5
+outer_dampingregion_ratio = 1.3
+damping_rate              = 1.0
+nu_iso                    = 1.                           # this turns on viscosity!
+nu_alpha                  = 1.e-2
+PlanetaryGravityOrder     = 2
