@@ -27,15 +27,15 @@ dt          = 6283.185307179586      # time increment between outputs
 <time>
 cfl_number     = 0.5            # The Courant, Friedrichs, & Lewy (CFL) Number
 nlim           = -1             # cycle limit
-tlim           = 3000000       # time limit
-integrator     = vl2            # time integration algorithm
+tlim           = 1500000       # time limit
+integrator     = rk2            # time integration algorithm
 xorder         = 2              # order of spatial reconstruction
 ncycle_out     = 100            # interval for stdout summary info
 dt_diagnostics = 0              # interval (in STS stages) for stdout extra dt info
 
 
 <mesh>
-nx1         = 32             # Number of zones in X1-direction
+nx1         = 128             # Number of zones in X1-direction
 x1min       = 0.3           # minimum value of X1
 x1max       = 7.0            # maximum value of X1
 ix1_bc      = user           # Inner-X1 boundary condition flag
@@ -54,11 +54,11 @@ x3max       = 0.5            # maximum value of X3
 ix3_bc      = periodic       # Inner-X3 boundary condition flag
 ox3_bc      = periodic       # Outer-X3 boundary condition flag
 
-num_threads = 4
+num_threads = 8
 refinement  = None
 
 <meshblock>
-nx1 = 8
+nx1 = 16
 nx2 = 8
 nx3 = 1
 

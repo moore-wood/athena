@@ -201,9 +201,15 @@ if (fix_outer_mass_flux &&
 
 void MeshBlock::InitUserMeshBlockData(ParameterInput *pin) {
 
-  AllocateUserOutputVariables(2);
+  AllocateUserOutputVariables(6);
   SetUserOutputVariableName(0, "flx_x1_in");
   SetUserOutputVariableName(1, "flx_x1_out");
+
+  SetUserOutputVariableName(2, "mom_r_flux_in");
+  SetUserOutputVariableName(3, "mom_r_flux_out");
+
+  SetUserOutputVariableName(4, "mom_phi_flux_in");
+  SetUserOutputVariableName(5, "mom_phi_flux_out");
 
   return;
 }
@@ -537,13 +543,13 @@ void DiskInnerX1(MeshBlock *pmb, Coordinates *pco, AthenaArray<Real> &prim,
 
         Real p_over_r = p0_over_r0;
         if (NON_BAROTROPIC_EOS) p_over_r = PoverRho(rad_ghost, phi_ghost, z_ghost);
-        Real denmid = rho0*std::pow(rad_ghost/r0,-1.5-pslope);
+        Real denmid = 1*std::pow(rad_ghost/r0,-1.5-pslope);
         Real dentem = denmid*std::exp(gm0/p_over_r*(1./std::sqrt(SQR(rad_ghost)+SQR(z_ghost))-1./rad_ghost));
         Real den = dentem;
 
-        gas_rho_ghost  = prim(IDN, k, j, il);
+        gas_rho_ghost  = std::max(den,dfloor);
         gas_vel1_ghost = vis_vel_r;
-        gas_vel2_ghost = vel_gas_phi;
+        gas_vel2_ghost = prim(IM2, k ,j, il);
         gas_vel3_ghost = 0.0;
 
         if (NON_BAROTROPIC_EOS) {
@@ -589,13 +595,13 @@ void DiskOuterX1(MeshBlock *pmb, Coordinates *pco, AthenaArray<Real> &prim,
 
         Real p_over_r = p0_over_r0;
         if (NON_BAROTROPIC_EOS) p_over_r = PoverRho(rad_ghost, phi_ghost, z_ghost);
-        Real denmid = rho0*std::pow(rad_ghost/r0,-1.5-pslope);
+        Real denmid = 1*std::pow(rad_ghost/r0,-1.5-pslope);
         // Real dentem = denmid*std::exp(gm0/p_over_r*(1./std::sqrt(SQR(rad_ghost)+SQR(z_ghost))-1./rad_ghost));
         Real den = denmid;
 
         gas_rho_ghost = prim(IDN, k, j, iu);
-        gas_vel1_ghost = vis_vel_r;
-        gas_vel2_ghost = vel_gas_phi;
+        gas_vel1_ghost = prim(IM1, k ,j, iu);
+        gas_vel2_ghost = prim(IM2, k ,j, iu);
         gas_vel3_ghost = 0.0;
         if (NON_BAROTROPIC_EOS) {
           Real &gas_pres_ghost = prim(IEN, k, j, iu+i);
@@ -870,6 +876,20 @@ void MeshBlock::UserWorkBeforeOutput(ParameterInput *pin) {
 
         user_out_var(1,k,j,i) =
             phydro->flux[X1DIR](IDN,k,j,i+1);
+
+        // 径向动量通量
+        user_out_var(2,k,j,i) =
+            phydro->flux[X1DIR](IM1,k,j,i);
+
+        user_out_var(3,k,j,i) =
+            phydro->flux[X1DIR](IM1,k,j,i+1);
+
+        // 方位动量通量
+        user_out_var(4,k,j,i) =
+            phydro->flux[X1DIR](IM2,k,j,i);
+
+        user_out_var(5,k,j,i) =
+            phydro->flux[X1DIR](IM2,k,j,i+1);
 
       }
     }

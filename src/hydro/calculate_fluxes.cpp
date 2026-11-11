@@ -177,9 +177,25 @@ if (use_inflx_x1 &&
 
   for (int k = ks; k <= ke; ++k) {
     for (int j = js; j <= je; ++j) {
-      x1flux(IDN,k,j,ie+1) = inflx_x1(k,j,0);
+
+      const int iface = ie+1;
+
+      // 原始黎曼质量通量
+      const Real mass_flux_old =
+          x1flux(IDN,k,j,iface);
+
+      // 用户指定的质量通量
+      const Real mass_flux_new =
+          inflx_x1(k,j,0);
+
+      // 固定质量通量
+      x1flux(IDN,k,j,iface) = mass_flux_new;
+
+
     }
   }
+
+
 }
   //--------------------------------------------------------------------------------------
   // j-direction
